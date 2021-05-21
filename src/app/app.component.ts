@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { Observer } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 const API_URL = 'https://reqres.in/api/users';
 
@@ -19,21 +17,21 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subject = new Subject<boolean>();
   subscription?: Subscription;
-  // customObservable: Observable<boolean> = Observable.create(
-  //   (observer: Observer<boolean>) => {
-  //     setInterval(() => {
-  //       observer.next(true);
-  //     }, 50);
-  //   }
-  // );
 
   constructor(private httpClient: HttpClient) {}
 
   ngOnInit(): void {
-    this.subscription = this.subject.subscribe((result) => {
-      console.log('subscription ...', result);
-      this.showLoading = result;
-    });
+    this.subscription = this.subject
+      .pipe(
+        // first(), // this will cause the subscription ended
+        finalize(() => {
+          console.log('finalize');
+        })
+      )
+      .subscribe((result) => {
+        console.log('subscription ...', result);
+        this.showLoading = result;
+      });
   }
 
   ngOnDestroy(): void {
@@ -44,12 +42,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   eventHandle(loading: boolean) {
     this.showLoading = loading;
+    console.log('exit eventHandle ...');
   }
 
   timeoutHandle(loading: boolean) {
     setTimeout(() => {
       this.showLoading = loading;
     }, 50);
+    console.log('exit timeoutHandle ...');
   }
 
   httpClientHandle(loading: boolean) {
@@ -57,9 +57,15 @@ export class AppComponent implements OnInit, OnDestroy {
       console.log('[api response] ...', response);
       this.showLoading = loading;
     });
+    console.log('exit httpClientHandle ...');
   }
 
   observableHandle(loading: boolean) {
     this.subject.next(loading);
+
+    // this will cause the subscription ended
+    // this.subject.complete();
+
+    console.log('exit observableHandle ...');
   }
 }
