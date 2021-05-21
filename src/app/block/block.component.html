@@ -1,0 +1,12 @@
+<div class="case">
+  <h2>{{ title }}</h2>
+  <div class="content">
+    <button type="button" (click)="startLoading()" [disabled]="showLoading">
+      Start
+    </button>
+    <app-spinner *ngIf="showLoading"></app-spinner>
+    <button type="button" (click)="stopLoading()" [disabled]="!showLoading">
+      Stop
+    </button>
+  </div>
+</div>

@@ -42,47 +42,24 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  startLoading(): void {
-    console.log('[startLoading] ...');
-    this.showLoading = true;
+  eventHandle(loading: boolean) {
+    this.showLoading = loading;
   }
 
-  stopLoading(): void {
-    console.log('[stopLoading] ...');
-    this.showLoading = false;
-  }
-
-  startTimeout() {
+  timeoutHandle(loading: boolean) {
     setTimeout(() => {
-      this.showLoading = true;
+      this.showLoading = loading;
     }, 50);
   }
 
-  stopTimeout() {
-    setTimeout(() => {
-      this.showLoading = false;
-    }, 50);
-  }
-
-  httpStart() {
+  httpClientHandle(loading: boolean) {
     this.httpClient.get(API_URL).subscribe((response) => {
       console.log('[api response] ...', response);
-      this.showLoading = true;
+      this.showLoading = loading;
     });
   }
 
-  httpStop() {
-    this.httpClient.get(API_URL).subscribe((response) => {
-      console.log('[api response] ...', response);
-      this.showLoading = false;
-    });
-  }
-
-  observableStart() {
-    this.subject.next(true);
-  }
-
-  observableStop() {
-    this.subject.next(false);
+  observableHandle(loading: boolean) {
+    this.subject.next(loading);
   }
 }

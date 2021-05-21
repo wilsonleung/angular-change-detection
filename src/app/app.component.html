@@ -2,63 +2,34 @@
 
 <div class="container">
   <!-- Event -->
-  <div class="case">
-    <h2>Event</h2>
-    <div class="content">
-      <button type="button" (click)="startLoading()" [disabled]="showLoading">
-        Start
-      </button>
-      <div class="lds-dual-ring" *ngIf="showLoading"></div>
-      <button type="button" (click)="stopLoading()" [disabled]="!showLoading">
-        Stop
-      </button>
-    </div>
-  </div>
+  <app-block
+    title="Event"
+    [showLoading]="showLoading"
+    (loading)="eventHandle($event)"
+  >
+  </app-block>
+
   <!-- Timeout -->
-  <div class="case">
-    <h2>Timeout</h2>
-    <div class="content">
-      <button type="button" (click)="startTimeout()" [disabled]="showLoading">
-        Start
-      </button>
-      <div class="lds-dual-ring" *ngIf="showLoading"></div>
-      <button type="button" (click)="stopTimeout()" [disabled]="!showLoading">
-        Stop
-      </button>
-    </div>
-  </div>
+  <app-block
+    title="Timeout"
+    [showLoading]="showLoading"
+    (loading)="timeoutHandle($event)"
+  >
+  </app-block>
+
   <!-- HttpClient -->
-  <div class="case">
-    <h2>HttpClient</h2>
-    <div class="content">
-      <button type="button" (click)="httpStart()" [disabled]="showLoading">
-        Start
-      </button>
-      <div class="lds-dual-ring" *ngIf="showLoading"></div>
-      <button type="button" (click)="httpStop()" [disabled]="!showLoading">
-        Stop
-      </button>
-    </div>
-  </div>
+  <app-block
+    title="HttpClient"
+    [showLoading]="showLoading"
+    (loading)="httpClientHandle($event)"
+  >
+  </app-block>
+
   <!-- Custom Observable -->
-  <div class="case">
-    <h2>Custom Observable</h2>
-    <div class="content">
-      <button
-        type="button"
-        (click)="observableStart()"
-        [disabled]="showLoading"
-      >
-        Start
-      </button>
-      <div class="lds-dual-ring" *ngIf="showLoading"></div>
-      <button
-        type="button"
-        (click)="observableStop()"
-        [disabled]="!showLoading"
-      >
-        Stop
-      </button>
-    </div>
-  </div>
+  <app-block
+    title="Custom Observable"
+    [showLoading]="showLoading"
+    (loading)="observableHandle($event)"
+  >
+  </app-block>
 </div>
