@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap, take } from 'rxjs/operators';
+import { UserService } from './users.service';
 
 const API_URL = 'https://reqres.in/api/users';
 
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   subject = new Subject<boolean>();
   subscription?: Subscription;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private userSvc: UserService) {}
 
   ngOnInit(): void {
     this.subscription = this.subject
@@ -67,5 +68,24 @@ export class AppComponent implements OnInit, OnDestroy {
     // this.subject.complete();
 
     console.log('exit observableHandle ...');
+  }
+
+  observableFinalHandle(loading: boolean) {
+    this.showLoading = true;
+    this.userSvc
+      .getUsers()
+      .pipe(
+        tap((users) => {
+          console.log('tap ...');
+        }),
+        finalize(() => {
+          console.log('finalize...');
+          this.showLoading = false;
+        })
+      )
+      .subscribe((users) => {
+        console.log('subscribe ...', users);
+        // this.showLoading = false;
+      });
   }
 }

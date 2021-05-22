@@ -1,5 +1,5 @@
 .case {
-  width: 500px;
+  width: 400px;
   padding: 1rem;
   border: 1px silver solid;
   background-color: white;
@@ -13,6 +13,6 @@
 }
 
 button {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   padding: 1rem;
 }
