@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
   observableFinalHandle(loading: boolean) {
     this.showLoading = true;
     this.userSvc
-      .getUsers()
+      .getUsers2()
       .pipe(
         tap((users) => {
           console.log('tap ...');

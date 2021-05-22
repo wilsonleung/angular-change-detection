@@ -32,4 +32,19 @@ export class UserService {
       take(1)
     );
   }
+
+  getUsers2(): Observable<User[]> {
+    return this.httpClient.get<any>(API_URL).pipe(
+      map((results) => {
+        // console.log('result from user svc', results.data);
+        return results.data;
+      }),
+      mergeMap((users) => {
+        return new Observable<User[]>((observer) => {
+          return observer.next(users);
+        });
+      }),
+      take(1)
+    );
+  }
 }
