@@ -15,19 +15,19 @@ const API_URL = 'https://reqres.in/api/users';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  //   subject = new Subject<User[]>();
-  subject = new BehaviorSubject<User[]>([]);
   constructor(private httpClient: HttpClient) {}
 
   getUsers(): Observable<User[]> {
+    //   subject = new Subject<User[]>();
+    const subject = new BehaviorSubject<User[]>([]);
     return this.httpClient.get<any>(API_URL).pipe(
       map((results) => {
         // console.log('result from user svc', results.data);
         return results.data;
       }),
       mergeMap((users) => {
-        this.subject.next(users as User[]);
-        return this.subject.asObservable();
+        subject.next(users as User[]);
+        return subject.asObservable();
       }),
       take(1)
     );
