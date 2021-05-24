@@ -73,7 +73,26 @@ export class AppComponent implements OnInit, OnDestroy {
   observableFinalHandle(loading: boolean) {
     this.showLoading = true;
     this.userSvc
-      .getUsers2()
+      .getUsers3()
+      .pipe(
+        tap((users) => {
+          console.log('tap ...');
+        }),
+        finalize(() => {
+          console.log('finalize...');
+          this.showLoading = false;
+        })
+      )
+      .subscribe((users) => {
+        console.log('subscribe ...', users);
+        // this.showLoading = false;
+      });
+  }
+
+  observableFinalHandle2(loading: boolean) {
+    this.showLoading = true;
+    this.userSvc
+      .getUsers()
       .pipe(
         tap((users) => {
           console.log('tap ...');

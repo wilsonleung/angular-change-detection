@@ -18,7 +18,6 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
 
   getUsers(): Observable<User[]> {
-    //   subject = new Subject<User[]>();
     const subject = new BehaviorSubject<User[]>([]);
     return this.httpClient.get<any>(API_URL).pipe(
       map((results) => {
@@ -45,6 +44,22 @@ export class UserService {
         });
       }),
       take(1)
+    );
+  }
+
+  getUsers3(): Observable<User[]> {
+    const subject = new Subject<User[]>();
+
+    return this.httpClient.get<any>(API_URL).pipe(
+      map((results) => {
+        // console.log('result from user svc', results.data);
+        return results.data;
+      }),
+      mergeMap((users) => {
+        subject.next(users as User[]);
+        subject.complete();
+        return subject;
+      })
     );
   }
 }

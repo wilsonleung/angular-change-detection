@@ -25,9 +25,9 @@
   >
   </app-block>
 
-  <!-- Custom Observable -->
+  <!-- Instance Level Observable -->
   <app-block
-    title="Custom Observable"
+    title="Instance Level Observable"
     [showLoading]="showLoading"
     (loading)="observableHandle($event)"
   >
@@ -38,6 +38,14 @@
     title="HttpClient with Subject"
     [showLoading]="showLoading"
     (loading)="observableFinalHandle($event)"
+  >
+  </app-block>
+
+  <!-- HttpClient with BehaviourSubject -->
+  <app-block
+    title="HttpClient with BehaviourSubject"
+    [showLoading]="showLoading"
+    (loading)="observableFinalHandle2($event)"
   >
   </app-block>
 </div>
