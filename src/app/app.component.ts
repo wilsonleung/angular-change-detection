@@ -1,8 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { finalize, tap, take } from 'rxjs/operators';
-import { UserService } from './users.service';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import {
+  finalize,
+  tap,
+  take,
+  mergeMap,
+  exhaustMap,
+  concatMap,
+  map,
+} from 'rxjs/operators';
+import { User, UserService } from './users.service';
 
 const API_URL = 'https://reqres.in/api/users';
 
@@ -18,6 +26,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subject = new Subject<boolean>();
   subscription?: Subscription;
+
+  users: User[] = [];
 
   constructor(private httpClient: HttpClient, private userSvc: UserService) {}
 
@@ -54,8 +64,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   httpClientHandle(loading: boolean) {
-    this.httpClient.get(API_URL).subscribe((response) => {
+    this.httpClient.get<any>(API_URL).subscribe((response) => {
       console.log('[api response] ...', response);
+      this.users = response.data;
       this.showLoading = loading;
     });
     console.log('exit httpClientHandle ...');
@@ -89,22 +100,35 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
+  check() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve(true), 3000);
+    });
+  }
+
   observableFinalHandle2(loading: boolean) {
+    console.log('with promise ...');
+
     this.showLoading = true;
-    this.userSvc
-      .getUsers()
+    const start = of(false);
+
+    start
       .pipe(
-        tap((users) => {
-          console.log('tap ...');
+        mergeMap((result) => {
+          console.log('return promise ...', result);
+          return this.check();
+        }),
+        mergeMap((result) => {
+          console.log('return observable ...', result);
+          return this.userSvc.getUsers();
         }),
         finalize(() => {
-          console.log('finalize...');
           this.showLoading = false;
         })
       )
-      .subscribe((users) => {
-        console.log('subscribe ...', users);
-        // this.showLoading = false;
+      .subscribe((results) => {
+        console.log('subscribe ...', results);
+        this.users = results;
       });
   }
 }
